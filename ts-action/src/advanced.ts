@@ -1,3 +1,5 @@
+export {}
+
 // 类型检查机制： TypeScript编译器在做类型检查时，所秉承的一些原则，以及表现出的一些行为。作用是辅助开发，提高开发效率
 
 // 类型推断: 指的是不需要指定变量的类型（函数的返回值类型），TypeScript可以根据某些规则自动地为其推断出一个类型
@@ -26,3 +28,25 @@ foo.bar = 1
 let foo1:Bar = {
   bar: 1
 }
+
+// 类型兼容
+// 当一个类型Y可以被赋值给另一个类型X时，我们就可以说类型X兼容类型Y
+// X兼容Y：X（目标类型） = Y（源类型）
+
+// 把编译配置中的strictNullChecks设置成false，字符类型是兼容null类型的（因为null是字符的子类型）
+let s: string = 'a'
+// s = null
+
+// 接口兼容
+interface X {
+  a: any;
+  b: any;
+}
+interface Y {
+  a: any;
+  b: any;
+  c: any;
+}
+
+let x: X = {a:1,b:2}
+let y: Y = {a:1,b:2,c:3}
