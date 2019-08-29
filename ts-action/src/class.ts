@@ -1,16 +1,16 @@
 // 类属性都是实例属性，不是原型属性，而类方法都是原型方法
-// 实例的属性必须具有初始值，或者在构造函数中初始化
+// 实例的属性必须具有初始值，或者在构造函数中初始化，除了类型为any。
 class Dog {
-  constructor (name: string) {
+  constructor(name: string) {
     this.name = name
     this.legs = 4
   }
   public name: string
-  run () {}
-  private pri(){}
-  protected pro(){}
-  readonly legs:number = 3
-  static food:string = 'bones'
+  run() { }
+  private pri() { }
+  protected pro() { }
+  readonly legs: number = 3
+  static food: string = 'bones'
 }
 console.log(Dog.prototype)
 let dog = new Dog('jinmao')
@@ -21,21 +21,21 @@ console.log(Dog.food)
 
 //类的继承，研究一下为什么派生类的构造函数必须包含“super”调用，并且访问派生类的构造函数中的this之前，必须调用“super"
 class Husky extends Dog {
-  constructor (name:string,color:string) {
+  constructor(name: string, color: string) {
     super(name)
     this.color = color
     // this.pri() // 子类不能调用父类的私有属性
     this.pro()
   }
-  protected age:number = 3
-  private nickname:string = '二哈'
-  info ():string {
+  protected age: number = 3
+  private nickname: string = '二哈'
+  info(): string {
     return this.age + this.nickname
   }
   color: string // 参数用了修饰符，可以直接定义为属性，这里就不需要了
 }
 
-let husky = new Husky('husky','black')
+let husky = new Husky('husky', 'black')
 console.log(husky.info())
 
 // console.log(Husky.food)
@@ -68,16 +68,16 @@ abstract class Animal {
   eat() {
     console.log('eat')
   }
-  abstract sleep():void // 抽象方法，在子类中实现
+  abstract sleep(): void // 抽象方法，在子类中实现
 }
 // let animal = new Animal() // 抽象类无法创建实例
 
 
 class Cat extends Animal {
-  constructor (public name: string) {
+  constructor(public name: string) {
     super()
   }
-  run () {}
+  run() { }
   sleep() {
     console.log('sleep')
   }
@@ -91,17 +91,17 @@ let animal: Animal[] = [cat]
 
 // this类型
 class WorkFlow {
-  step1 () {
+  step1() {
     return this
   }
-  step2 () {
+  step2() {
     return this
   }
 }
 new WorkFlow().step1().step2()
 
 class Myflow extends WorkFlow {
-  next () {
+  next() {
     return this
   }
 }
