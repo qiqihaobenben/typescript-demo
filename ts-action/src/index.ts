@@ -5,5 +5,6 @@
 // import './class'
 // import './interface-class'
 // import './generics'
+import './advanced'
 let hello: string = "Hello TypeScript";
 document.querySelectorAll('.app')[0].innerHTML = hello
