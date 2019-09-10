@@ -16,8 +16,8 @@ enum Message {
   Success = '成功',
   Fail = '失败'
 }
-console.log(Message.Success)
-console.log(Message)
+// console.log(Message.Success)
+// console.log(Message)
 
 // 异构枚举，不推荐使用
 enum Answer {
@@ -41,7 +41,7 @@ enum Char {
   // 在computed member后面的枚举成员，一定要赋一个初始值，否则报错
   f = 1
 }
-// console.log(Char)
+console.log(Char)
 
 // 常量枚举
 // 编译后Month是没有值的，只能在编译前使用
