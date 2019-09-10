@@ -1,3 +1,4 @@
+export { }
 // 数字枚举
 enum Role {
   Reporter = 1,
@@ -6,6 +7,7 @@ enum Role {
   Owner,
   Guest
 }
+// Role.Reporter = 2 // 只读，会报错
 // console.log(Role.Guest)
 // console.log(Role)
 
@@ -14,15 +16,15 @@ enum Message {
   Success = '成功',
   Fail = '失败'
 }
-// console.log(Message.Success)
-// console.log(Message)
+console.log(Message.Success)
+console.log(Message)
 
 // 异构枚举，不推荐使用
- enum Answer {
-   N,
-   Y = 'Yes',
+enum Answer {
+  N,
+  Y = 'Yes',
   //  X = Math.random() // 含字符串成员的枚举中不允许使用计算值
- }
+}
 //  console.log(Answer[0])
 //  console.log(Answer)
 
@@ -52,9 +54,9 @@ let month = [Month.Jan, Month.Feb, Month.Mar];
 
 
 // 枚举类型
-enum E {a,b}
-enum F {a = 1,b = 5, c = 4,d} // 中间的5索引会被忽略，直接4：c,5：d
-enum G {a = 'apple',b = 'banana'}
+enum E { a, b }
+enum F { a = 1, b = 5, c = 4, d } // 中间的5索引会被忽略，直接4：c,5：d
+enum G { a = 'apple', b = 'banana' }
 
 // 变量定义为数字枚举类型，赋值任意number类型的值都是可以的，对枚举没有影响，但是不能赋值字符串等。
 let e: E = 3
@@ -75,5 +77,5 @@ let e4: E.b = 3
 
 // let g1: G = 'abc' // 会报错
 // 定义为字符串枚举类型的赋值，只能用枚举成员，不能随意赋值。
-let g2: G = G.a 
+let g2: G = G.a
 let g3: G.a = G.a
