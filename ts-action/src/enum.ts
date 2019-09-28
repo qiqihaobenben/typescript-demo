@@ -72,7 +72,7 @@ let e2: E = 3
 // 就算定义为枚举类型的某个具体成员的类型，赋值也是对枚举没有影响的。E的结果还是不变的。
 let e3: E.a = 3
 let e4: E.b = 3
-console.log(E, E.a, E.b, e3, e4)
+// console.log(E, E.a, E.b, e3, e4)
 // 同一个枚举类型的不同枚举成员是不能比较的
 // console.log(e3 === e4)
 
