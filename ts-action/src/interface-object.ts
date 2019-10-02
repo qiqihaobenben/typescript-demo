@@ -3,8 +3,8 @@
 interface List {
   readonly id: number; // 只读属性
   name: string;
-  // [x:string]: number | string;
-  age?: number;
+  [x:string]: any;
+  // age?: number;
 }
 
 interface Result {
@@ -14,9 +14,9 @@ interface Result {
 function render(result: Result) {
   result.data.forEach((value) => {
     console.log(value.id,value.name)
-    if(value.age) {
-      console.log(value.age)
-    }
+    // if(value.age) {
+    //   console.log(value.age)
+    // }
   })
 }
 let result = {

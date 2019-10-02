@@ -1,6 +1,6 @@
 // import './datatype'
-import './enum'
-// import './interface-object'
+// import './enum'
+import './interface-object'
 // import './interface-function'
 // import './class'
 // import './interface-class'
