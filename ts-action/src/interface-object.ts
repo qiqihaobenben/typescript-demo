@@ -3,8 +3,8 @@
 interface List {
   readonly id: number; // 只读属性
   name: string;
-  [x:string]: any;
-  // age?: number;
+  // [x: string]: any;
+  age?: number;
 }
 
 interface Result {
@@ -13,16 +13,16 @@ interface Result {
 
 function render(result: Result) {
   result.data.forEach((value) => {
-    console.log(value.id,value.name)
-    // if(value.age) {
-    //   console.log(value.age)
-    // }
+    console.log(value.id, value.name)
+    if (value.age) {
+      console.log(value.age)
+    }
   })
 }
 let result = {
   data: [
-    {id: 1, name: 'A',sex: 'male'},
-    {id: 2,name: 'B',age: 10}
+    { id: 1, name: 'A', sex: 'male' },
+    { id: 2, name: 'B', age: 10 }
   ]
 }
 render(result);
@@ -34,7 +34,8 @@ interface StringArray {
 let chars: StringArray = ['1']
 // 可以同时使用两种类型的索引，但是数字索引的返回值必须是字符串索引返回值类型的子类型。
 interface Names {
-  [x:string]: any;
-  [z:number]: number;
+  [x: string]: number | string;
+  // y: boolean; // 会报错boolean不会赋值给字符串索引类型，因为字符串索引签名的类型是 number | string，所以之后再定义的属性必须是签名值类型的子类型
+  [z: number]: number;
 }
 
