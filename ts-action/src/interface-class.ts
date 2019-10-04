@@ -1,7 +1,7 @@
 
 // 接口不能约束类的构造函数，只能约束公有成员
 interface Human {
-  // new (name:string):void
+  // new (name:string):void // 接口不能约束类的构造函数
   name: string;
   eat(): void;
 }
@@ -40,7 +40,7 @@ let boy: Boy = {
 // 接口抽离类成员时不仅抽离了公有属性，还抽离了私有属性和受保护属性,所以非继承的子类都会报错
 class Auto {
   state = 1
-  // protected state2 = 0
+  // protected state2 = 0 // 下面的C会报错，因为C并不是Auto的子类，C只是实现了Auto抽象出来的接口
 }
 interface AutoInterface extends Auto {
 
@@ -51,6 +51,7 @@ class C implements AutoInterface {
 
 // 被抽象的类的子类，也可以实现类抽象出来的接口，而且不用实现父类的已有的属性
 class Bus extends Auto implements AutoInterface {
+  // 不用设置state，Bus的父类已经有了。
   // a() {
   //   console.log(this.state2)
   // }

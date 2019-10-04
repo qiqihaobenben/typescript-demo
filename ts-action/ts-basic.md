@@ -331,9 +331,286 @@ enum Answer {
   }
  ```
 
+#### 函数类型接口
+
+```
+interface Add {
+  (x: number, y: number): number;
+}
+// 跟变量声明是等价的：let Add: (a: number, b: number) => number
+let add4: Add = (a,b) => a + b
+```
+
+#### 混合接口
+
+混合接口，需要注意看一下，接口中的属性没有顺序之分，混合接口不需要第一个属性是匿名函数。
+```
+interface Lib {
+  version: string;
+  ():void;
+  doSomething():void;
+}
+// 需要用到类型断言
+let lib: Lib = (() => {}) as Lib;
+lib.version = '1.0'
+lib.doSomething = () => {}
+```
+
+#### 接口继承
+
+```
+// 以下是接口继承的例子
+interface Human {
+  name: string;
+  eat(): void;
+}
+interface Man extends Human {
+  run(): void
+}
+interface Child {
+  cry():void
+}
+
+interface Boy extends Man, Child {}
+let boy: Boy = {
+  name: '',
+  run(){},
+  eat(){},
+  cry(){}
+}
+```
+
+### 函数类型相关
+
+#### 定义TS函数的四种方式，第一种方式可以直接调用，但是后三种就需要先实现定义的函数再调用
+
+```
+// 第一种，直接声明
+function add1 (x:number, y:number):number {
+  return x + y
+}
+// 应用时形参和实参一一对应
+add1(1, 2)
+
+// 第二种 变量声明
+let add2: (x:number, y:number) => number
+// 应用如下
+add2  = (a, b) => a + b
+add2(2, 2)
+
+// 第三种 类型别名
+type Add3 = (x: number, y: number) => number
+// 应用如下
+let add3: Add3 = (a, b) => a + b
+add3(3, 2)
 
 
+// 第四种 接口实现
+interface Add4 {
+  (x: number, y: number): number;
+}
+// 跟变量声明是等价的：let Add4: (a: number, b: number) => number
+let add4: Add4 = (a,b) => a + b
+add4(4, 2)
+```
 
+#### 可选参数: 可选参数必须位于必选参数之后，即可选参数后面不能再有必选参数
+```
+// y后面不能再有必选参数，所以d会报错
+// function add5(x:number, y?:number, d:number) {
+
+// 正确如下
+function add5(x:number, y?:number) {
+  return y? y + x: x
+}
+add5(1)
+```
+
+#### 参数默认值：带默认值的参数不需要放在必选参数后面，但如果带默认值的参数出现在必选参数前面，必须明确的传入undefined值来获得默认值。在所有必选参数后面的带默认值的参数都是可选的，与可选参数一样，在调用函数的时候可以省略。
+
+```
+function add6 (x: number, y = 0, z:number,q = 1) {
+  return x +y + z +q
+}
+add6(1,undefined,2)
+```
+
+#### 函数重载: 要求定义一系列的函数声明，在类型最宽泛的版本中实现重载 TS编译器的函数重载会去查询一个重载的列表，并且从最开始的一个进行匹配，如果匹配成功，就直接执行。所以我们要把大概率匹配的定义写在前面。
+
+函数重载的声明只用于类型检查阶段，在编译后会被删除。
+
+```
+function add8(...rest: number[]):number
+function add8(...rest: string[]):string
+function add8(...rest: any[]):any {
+  let first = rest[0]
+  if(typeof first === 'string') {
+    return rest.join('')
+  }
+  if(typeof first === 'number') {
+    return rest.reduce((pre,cur) => pre + cur)
+  }
+}
+add8(1,2,3) // 6
+add8('1','2','3') // '123'
+```
+
+### 类
+
+#### 类属性和方法注意点
+* 类属性都是实例属性，不是原型属性，而类方法都是原型方法
+* 实例的属性必须具有初始值，或者在构造函数中初始化，除了类型为any。
+
+#### 类的继承:派生类的构造函数必须包含“super”调用，并且访问派生类的构造函数中的this之前，必须调用“super"
+
+#### 类修饰符
+1、public: 所有人可见（默认）。
+
+2、 private: 私有属性
+
+私有属性只能在声明的类中访问，在子类或者生成的实例中都不能访问,但是private属性可以在实例的方法中被访问到，因为也相当于在类中访问，但是子类的的实例方法肯定是访问不到的。
+
+可以把类的constructor定义为私有类型，那么这个类既不能被实例化也不能被继承
+
+
+3、 protected 受保护属性
+
+受保护属性只能在声明的类及其子类中访问,但是protect属性可以在实例的方法中被访问到，因为也相当于在类中访问
+
+可以把类的constructor定义为受保护类型,那么这个类不能被实例化,但是可以被继承，相当于基类
+
+4、 readonly 只读属性
+
+只读属性必须具有初始值，或者在构造函数中初始化,初始化后就不能更改了，并且已经设置过初始值的只读属性，也是可以在构造函数中被重新初始化的。但是在其子类的构造函数中不能被重新初始化。
+
+5、 static 静态属性
+
+只能通过类的名称调用，不能在实例和构造函数或者子类中的构造函数和实例中访问，但是静态属性是可以继承的，用子类的类名可以访问
+
+**注意：构造函数的参数也可以添加修饰符,这样可以将参数直接定义为类的属性**
+
+```
+class Dog {
+  constructor(name: string) {
+    this.name = name
+    this.legs = 4 // 已经有默认值的只读属性是可以被重新初始化的
+  }
+  public name: string
+  run() { }
+  private pri() { }
+  protected pro() { }
+  readonly legs: number = 3
+  static food: string = 'bones'
+}
+let dog = new Dog('jinmao')
+// dog.pri() // 私有属性不能在实例中调用
+// dog.pro() // 受保护的属性，不能在实例中调用
+console.log(Dog.food) // 'bones'
+
+
+class Husky extends Dog {
+  constructor(name: string, public color: string) {
+    super(name)
+    this.color = color
+    // this.legs = 5 // 子类的构造函数中是不能对父类的只读属性重新初始化的
+    // this.pri() // 子类不能调用父类的私有属性
+    this.pro() // 子类可以调用父类的受保护属性
+  }
+  protected age: number = 3
+  private nickname: string = '二哈'
+  info(): string {
+    return this.age + this.nickname
+  }
+  // color: string // 参数用了修饰符，可以直接定义为属性，这里就不需要了
+}
+
+let husky = new Husky('husky', 'black')
+husky.info() // 如果调用的类的方法中有对类的私有属性和受保护属性的访问，这是不报错的。
+console.log(Husky.food) // 'bones' 子类可以调用父类的静态属性
+
+```
+
+#### 抽象类
+
+只能被继承，不能被实例化的类。
+
+在抽象类中可以添加共有的方法，也可以添加抽象方法，然后由子类具体实现
+
+```
+abstract class Animal {
+  eat() {
+    console.log('eat')
+  }
+  abstract sleep(): void // 抽象方法，在子类中实现
+}
+// let animal = new Animal() // 会报错，抽象类无法创建实例
+
+
+class Cat extends Animal {
+  constructor(public name: string) {
+    super()
+  }
+  run() { }
+  sleep() {
+    console.log('sleep')
+  }
+}
+
+let cat = new Cat('jiafei')
+cat.eat()
+```
+
+#### 接口类
+
+* 类实现接口时，必须实现接口的全部属性，不过类可以定义自己的属性
+* 接口不能约束类的构造函数，只能约束公有成员
+
+```
+interface Human {
+  // new (name:string):void // 接口不能约束类的构造函数
+  name: string;
+  eat(): void;
+}
+
+class Asian implements Human {
+  constructor (name: string) {
+    this.name = name
+  }
+  name: string
+  // private name: string  // 实现接口时用了私有属性会报错
+  eat() {}
+  sleep(){}
+}
+
+```
+
+#### 接口继承类
+
+相当于把类的成员抽象出来，只有类的成员结构，但是没有具体实现
+
+**接口抽离类成员时不仅抽离了公有属性，还抽离了私有属性和受保护属性,所以非继承的子类都会报错**
+
+被抽象的类的子类，也可以实现类抽象出来的接口，而且不用实现这个子类的父类已有的属性
+
+```
+class Auto {
+  state = 1
+  // protected state2 = 0 // 下面的C会报错，因为C并不是Auto的子类，C只是实现了Auto抽象出来的接口
+}
+interface AutoInterface extends Auto {
+
+}
+class C implements AutoInterface {
+  state = 1
+}
+
+// 被抽象的类的子类，也可以实现类抽象出来的接口，而且不用实现父类的已有的属性
+class Bus extends Auto implements AutoInterface {
+  // 不用设置state，Bus的父类已经有了。
+  
+}
+
+```
 
 
 ### VSCode工具配置
