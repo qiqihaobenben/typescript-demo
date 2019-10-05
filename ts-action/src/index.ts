@@ -3,8 +3,8 @@
 // import './interface-object'
 // import './interface-function'
 // import './class'
-import './interface-class'
-// import './generics'
+// import './interface-class'
+import './generics'
 // import './advanced'
 // import './advanced-ref'
 let hello: string = "Hello TypeScript";

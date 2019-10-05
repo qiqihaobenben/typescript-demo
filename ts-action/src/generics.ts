@@ -5,15 +5,15 @@ function log<T>(value: T): T {
   return value
 }
 
-log<string[]>(['a', 'b'])
-log([1, 2])
+// log<string[]>(['a', 'b'])
+// log([1, 2])
 
 // 泛型定义函数类型
 // 不用指定参数类型，会自己推断
 // type Log = <T>(value:T) => T
 // let myLog: Log = log
 // 如果这样用泛型定义函数类型，必须指定一个参数类型
-// type Log<T> = (vlaue:T) => T
+// type Log<T> = (value:T) => T
 // let myLog: Log<string> = log
 
 
@@ -24,30 +24,35 @@ interface Log {
 interface Log1<T> {
   (value: T): T;
 }
-// 泛型接口的泛型定义为全局是，实现必须指定一个参数类型,或者用带默认类型的泛型
-let myLog: Log1<string> = log
-myLog('a')
+let myLog: Log = log
+// 泛型接口的泛型定义为全局时，实现必须指定一个参数类型,或者用带默认类型的泛型
+let myLog1: Log1<string> = log
+// myLog1('a')
 
 interface Log2<T = string> {
   (value: T): T
 }
 
 let myLog2: Log2 = log
-myLog2('1')
+// myLog2('1')
 
 
 // 泛型类
 class Log3<T> {
+  // 静态成员不能引用类类型参数
+  // static start(value: T) {
+  //   console.log(value)
+  // }
   run(value: T) {
     console.log(value)
     return value
   }
 }
 let log3 = new Log3<number>()
-log3.run(1)
+// log3.run(1)
 // 不指定类型，就可以传入任何类型
 let log4 = new Log3()
-log4.run('abc')
+// log4.run('abc')
 
 
 // 泛型约束 约束泛型传入的类型
