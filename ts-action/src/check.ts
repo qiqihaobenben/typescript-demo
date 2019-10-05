@@ -4,16 +4,15 @@ export { }
 
 // 类型推断: 指的是不需要指定变量的类型（函数的返回值类型），TypeScript可以根据某些规则自动地为其推断出一个类型
 // 基础类型推断
-let a = 1 // 推断为number
-let b = [1] // 推断为number[]
-
-let c = (x = 1) => x + 1
+let a = 1 // 推断为 number
+let b = [1] // 推断为 number[]
+let c = (x = 1) => x + 1 // 推断为 let c: (x?: number) => number
 
 // 最佳通用类型推断
-let d = [1, null] // 推断为一个最兼容的类型，null是number的子类型，所以推断为number
+let d = [1, null] // 推断为一个最兼容的类型，null是number的子类型，所以推断为number[]
 
 // 上下文类型推断
-window.onkeydown = function (event) {
+window.onkeydown = (event:KeyboardEvent) => {
   // 从上下文推断出event为KeyboardEvent
   console.log(event.altKey)
 }
