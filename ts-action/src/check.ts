@@ -12,7 +12,7 @@ let c = (x = 1) => x + 1 // 推断为 let c: (x?: number) => number
 let d = [1, null] // 推断为一个最兼容的类型，null是number的子类型，所以推断为number[]
 
 // 上下文类型推断
-window.onkeydown = (event:KeyboardEvent) => {
+window.onkeydown = (event: KeyboardEvent) => {
   // 从上下文推断出event为KeyboardEvent
   console.log(event.altKey)
 }

@@ -613,7 +613,7 @@ class C implements AutoInterface {
 // 被抽象的类的子类，也可以实现类抽象出来的接口，而且不用实现父类的已有的属性
 class Bus extends Auto implements AutoInterface {
   // 不用设置state，Bus的父类已经有了。
-  
+
 }
 
 ```
@@ -734,13 +734,193 @@ let c = (x = 1) => x + 1 // 推断为 (x?: number) => number
 #### 最佳通用类型推断
 当需要从多个类型中推断出一个类型的时候，TypeScript会尽可能的推断出一个兼容当前所有类型的通用类型
 ```
-let d = [1, null] 
+let d = [1, null]
 // 推断为一个最兼容的类型，所以推断为(number | null)[]
 // 当关闭"strictNullChecks"配置项时，null是number的子类型，所以推断为number[]
 ```
 
 #### 上下文类型推断
 以上的推断都是从右向左，即根据表达式推断，上下文类型推断是从左向右，通常会发生在事件处理中。
+
+
+### 类型断言
+在确定自己比TS更准确的知道类型时，可以使用类型断言来绕过TS的检查，改造旧代码很有效，但是防止滥用。
+```
+interface Bar {
+  bar: number
+}
+let foo = {} as Bar
+foo.bar = 1
+// 但是推荐变量声明时就要指定类型
+let foo1: Bar = {
+  bar: 1
+}
+```
+
+### 类型兼容
+
+**当一个类型Y可以被赋值给另一个类型X时，我们就可以说类型X兼容类型Y**
+
+`X兼容Y：X（目标类型） = Y（源类型）`
+
+```
+let s: string = 'a'
+s = null // 把编译配置中的strictNullChecks设置成false，字符类型是兼容null类型的（因为null是字符的子类型）
+```
+
+#### 接口兼容
+
+**成员少的兼容成员多的**
+
+```
+interface X {
+  a: any;
+  b: any;
+}
+interface Y {
+  a: any;
+  b: any;
+  c: any;
+}
+
+let x: X = { a: 1, b: 2 }
+let y: Y = { a: 1, b: 2, c: 3 }
+// 源类型只要具有目标类型的必要属性，就可以进行赋值。接口之间相互兼容，成员少的兼容成员多的。
+x = y
+// y = x // 不兼容
+```
+
+#### 函数兼容性
+
+```
+type Handler = (a: number, b: number) => void
+function test(handler: Handler) {
+  return handler
+}
+```
+
+##### 1、参数个数
+
+###### 固定参数
+**目标函数的参数个数一定要多于源函数的参数个数**
+
+Handler目标函数，传入test的 **参数** 就是源函数
+
+```
+let handler1 = (a: number) => { }
+hof(handler1) // 传入的函数能接收一个参数，且参数是number，是兼容的
+let handler2 = (a: number, b: number, c: number) => { }
+// hof(handler2) // 传入的函数能接收三个参数，且参数是number，是不兼容的
+```
+
+###### 可选参数和剩余参数
+
+```
+let a1 = (p1: number, p2: number) => { }
+let b1 = (p1?: number, p2?: number) => { }
+let c1 = (...args: number[]) => { }
+```
+
+> (1) 固定参数时可以兼容可选参数和剩余参数的
+
+```
+a1 = b1 // 兼容
+a1 = c1 // 兼容
+```
+
+> (2) 可选参数是不兼容固定参数和剩余参数的,但是可以通过设置"strictFunctionTypes": false来消除报错，实现兼容
+
+```
+b1 = a1 //不兼容
+b1 = c1 // 不兼容
+```
+
+> (3) 剩余参数可以兼容固定参数和可选参数
+
+```
+c1 = a1 // 兼容
+c1 = b1 // 兼容
+```
+
+##### 2、参数类型
+
+###### 基础类型
+
+```
+// 接上面的test函数
+let handler3 = (a: string) => { }
+test(handler3) // 类型不兼容
+```
+
+###### 接口类型
+
+接口成员多的兼容成员少的，也**可以理解把接口展开，参数多的兼容参数少的**。对于不兼容的，也可以通过设置"strictFunctionTypes": false来消除报错，实现兼容
+
+```
+interface Point3D {
+  x: number;
+  y: number;
+  z: number;
+}
+interface Point2D {
+  x: number;
+  y: number;
+}
+let p3d = (point: Point3D) => { }
+let p2d = (point: Point2D) => { }
+
+p3d = p2d // 兼容
+p2d = p3d // 不兼容
+```
+
+##### 3、返回值类型
+目标函数的返回值类型必须与源函数的返回值类型相同，或者是其子类型
+
+```
+let f = () => ({ name: 'Alice' })
+let g = () => ({ name: 'A', location: 'beijing' })
+f = g // 兼容
+g = f // 不兼容
+```
+
+##### 4、函数重载
+函数重载列表（目标函数）
+```
+function overload(a: number, b: number): number;
+function overload(a: string, b: string): string;
+```
+函数的具体实现（源函数）
+```
+function overload(a: any, b: any): any { }
+```
+目标函数的参数要多于源函数的参数才能兼容
+```
+function overload(a:any,b:any,c:any):any {} // 具体实现时的参数多于重载列表中匹配到的第一个定义的函数的参数，也就是源函数的参数多于目标函数的参数，不兼容
+```
+返回值类型不兼容
+```
+function overload(a:any,b:any) {} // 去掉了返回值的any，不兼容
+```
+
+#### 枚举类型兼容性
+
+```
+enum Fruit { Apple, Banana }
+enum Color { Red, Yello }
+```
+
+##### 枚举类型和数字类型是完全兼容的
+
+```
+let fruit: Fruit.Apple = 4
+let no: number = Fruit.Apple
+```
+
+##### 枚举类型之间是完全不兼容的
+
+```
+let color: Color.Red = Fruit.Apple // 不兼容
+```
 
 
 
