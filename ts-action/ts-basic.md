@@ -922,13 +922,103 @@ let no: number = Fruit.Apple
 let color: Color.Red = Fruit.Apple // 不兼容
 ```
 
+#### 类的兼容性
+
+和接口比较相似，只比较结构，需要注意，在比较两个类是否兼容时，**静态成员和构造函数是不参与比较的**，如果两个类具有相同的实例成员，那么他们的实例就相互兼容
+
+```
+class A {
+  constructor(p: number, q: number) { }
+  id: number = 1
+  private name:string = '' // 只在A类中加这个私有属性，aa不兼容bb，但是bb兼容aa，如果A、B两个类中都加了私有属性，那么都不兼容
+}
+class B {
+  static s = 1
+  constructor(p: number) { }
+  id: number = 2
+  // private name:string = '' // 只在B类中加这个私有属性，aa兼容bb，但是bb不兼容aa，如果A、B两个类中都加了私有属性，那么都不兼容
+}
+let aa = new A(1, 2)
+let bb = new B(1)
+// 两个实例完全兼容，静态成员和构造函数是不比较的
+aa = bb
+bb = aa
+```
+
+###### 私有属性
+类中存在私有属性情况有两种，如果其中一个类有私有属性，另一个没有。没有的可以兼容有的，如果两个类都有，那两个类都不兼容。
+
+如果一个类中有私有属性，另一个类继承了这个类，那么这两个类就是兼容的。
+
+```
+class A {
+  constructor(p: number, q: number) { }
+  id: number = 1
+  private name:string = '' // 只在A类中加这个私有属性，aa不兼容bb，但是bb兼容aa，如果A、B两个类中都加了私有属性，那么都不兼容
+}
+class B {
+  static s = 1
+  constructor(p: number) { }
+  id: number = 2
+}
+let aa = new A(1, 2)
+let bb = new B(1)
+aa = bb // 不兼容
+bb = aa // 兼容
 
 
+// A中有私有属性，C继承A后，aa和cc是相互兼容的
+class C extends A { }
+let cc = new C(1, 2)
+// 两个类的实例是兼容的
+aa = cc
+cc = aa
+```
 
+#### 泛型兼容
 
+##### 泛型接口
+泛型接口为空时，泛型指定不同的类型，也是兼容的。
+```
+interface Empty<T> {}
 
+let obj1:Empty<number> = {}
+let obj2:Empty<string> = {}
+// 兼容
+obj1 = obj2
+obj2 = obj1
+```
 
+如果泛型接口中有一个接口成员时，类型不同就不兼容了
+```
+interface Empty<T> {
+  value: T
+}
 
+let obj1:Empty<number> = {}
+let obj2:Empty<string> = {}
+// 报错，都不兼容
+obj1 = obj2
+obj2 = obj1
+```
+
+##### 泛型函数
+两个泛型函数如果定义相同，没有指定类型参数的话也是相互兼容的
+
+```
+let log1 = <T>(x: T): T => {
+  return x
+}
+let log2 = <U>(y: U): U => {
+  return y
+}
+log1 = log2
+log2 = log1
+```
+
+#### 兼容性总结
+* 结构之间兼容：成员少的兼容成员多的
+* 函数之间兼容：参数多的兼容参数少的
 
 
 

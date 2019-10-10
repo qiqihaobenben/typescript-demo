@@ -171,9 +171,10 @@ interface Empty<T> {
 
 }
 
-// let obj1:Empty<number> = {}
-// let obj2:Empty<string> = {}
-// obj1 = obj2
+let obj1: Empty<number> = {}
+let obj2: Empty<string> = {}
+obj1 = obj2
+obj2 = obj1
 
 
 // 两个泛型函数如果定义相同，没有指定类型参数的话也是相互兼容的
@@ -186,6 +187,7 @@ let log2 = <U>(y: U): U => {
   return y
 }
 log1 = log2
+log2 = log1
 
 
 /**
