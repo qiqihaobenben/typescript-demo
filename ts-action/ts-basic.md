@@ -1020,7 +1020,133 @@ log2 = log1
 * 结构之间兼容：成员少的兼容成员多的
 * 函数之间兼容：参数多的兼容参数少的
 
+## 类型保护机制
 
+指的是TypeScript能够在特定的区块(`类型保护区块`)中保证变量属于某种特定的类型。可以在此区块中放心地引用此类型的属性，或者调用此类型的方法。
+
+前置代码，之后的代码在此基础运行
+```
+enum Type { Strong, Week }
+
+class Java {
+  helloJava() {
+    console.log('hello Java')
+  }
+  java: any
+}
+
+class JavaScript {
+  helloJavaScript() {
+    console.log('hello JavaScript')
+  }
+  javaScript: any
+}
+```
+
+实现getLanguage方法直接用lang.helloJava是不是存在作为判断是会报错的
+```
+function getLanguage(type: Type, x: string | number) {
+  let lang = type === Type.Strong ? new Java() : new JavaScript()
+
+  // 如果想根据lang实例的类型，直接用lang.helloJava是不是存在来作为判断是会报错的，因为现在lang是Java和JavaScript这两种类型的联合类型
+  if (lang.helloJava) {
+    lang.helloJava()
+  } else {
+    lang.helloJavaScript()
+  }
+  return lang
+}
+```
+
+> 利用之前的知识可以使用类型断言解决
+```
+function getLanguage(type: Type, x: string | number) {
+  let lang = type === Type.Strong ? new Java() : new JavaScript()
+
+  // 这里就需要用类型断言来告诉TS当前lang实例要是什么类型的
+  if ((lang as Java).helloJava) {
+    (lang as Java).helloJava()
+  } else {
+    (lang as JavaScript).helloJavaScript()
+  }
+  return lang
+}
+```
+
+> 类型保护第一种方法，instanceof
+```
+function getLanguage(type: Type, x: string | number) {
+  let lang = type === Type.Strong ? new Java() : new JavaScript()
+
+  // instanceof 可以判断实例是属于哪个类，这样TS就能判断了。
+  if (lang instanceof Java) {
+    lang.helloJava()
+  } else {
+    lang.helloJavaScript()
+  }
+  return lang
+}
+```
+
+> 类型保护第二种方法， in 可以判断某个属性是不是属于某个对象
+```
+function getLanguage(type: Type, x: string | number) {
+  let lang = type === Type.Strong ? new Java() : new JavaScript()
+
+  //  in 可以判断某个属性是不是属于某个对象 如上helloJava和java都能判断出来
+  if ('java' in lang) {
+    lang.helloJava()
+  } else {
+    lang.helloJavaScript()
+  }
+  return lang
+}
+```
+
+> 类型保护第三种方法， typeof类型保护，可以帮助我们判断基本类型
+```
+function getLanguage(type: Type, x: string | number) {
+  let lang = type === Type.Strong ? new Java() : new JavaScript()
+
+  // x也是联合类型，typeof类型保护，可以判断出基本类型。
+  if (typeof x === 'string') {
+    x.length
+  } else {
+    x.toFixed(2)
+  }
+  return lang
+}
+```
+
+>类型保护第四种方法，通过创建一个类型保护函数来判断对象的类型
+
+**类型保护函数**的返回值有点不同，用到了 is ，叫做**类型谓词**
+```
+function isJava(lang: Java | JavaScript): lang is Java {
+  return (lang as Java).helloJava !== undefined
+}
+```
+
+```
+function getLanguage(type: Type, x: string | number) {
+  let lang = type === Type.Strong ? new Java() : new JavaScript()
+
+  // 通过创建一个类型保护函数来判断对象的类型
+  if (isJava(lang)) {
+    lang.helloJava()
+  } else {
+    lang.helloJavaScript()
+  }
+  return lang
+}
+```
+
+### 总结
+不同的判断方法有不同的使用场景：
+* typeof：判断一个变量的类型（多用于基本类型）
+* instanceof：判断一个实例是否属于某个类
+* in：判断一个属性是否属于某个对象
+* 类型保护函数：某些判断可能不是一条语句能够搞定的，需要更多复杂的逻辑，适合封装到一个函数内
 
 ### VSCode工具配置
 

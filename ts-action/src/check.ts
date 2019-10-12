@@ -218,7 +218,14 @@ function isJava(lang: Java | JavaScript): lang is Java {
 
 function getLanguage(type: Type, x: string | number) {
   let lang = type === Type.Strong ? new Java() : new JavaScript()
+
   // 如果想根据lang实例的类型，直接用lang.helloJava是不是存在是会报错的，因为现在lang是Java和JavaScript这两种类型的联合类型
+  // if (lang.helloJava) {
+  //   lang.helloJava()
+  // } else {
+  //   lang.helloJavaScript()
+  // }
+
   // 这里就需要用类型断言来告诉TS当前lang实例要是什么类型的
   // if ((lang as Java).helloJava) {
   //   (lang as Java).helloJava()
