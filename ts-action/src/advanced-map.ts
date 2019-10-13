@@ -21,3 +21,8 @@ type PickObj = Pick<Obj, 'a' | 'b'>
 
 // 非同态 会创建新的属性
 type RecordObj = Record<'x' | 'y', Obj>
+// 创建一个新的类型为
+// {
+//     x: Obj;
+//     y: Obj;
+// }

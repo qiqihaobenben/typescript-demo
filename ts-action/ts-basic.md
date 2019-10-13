@@ -5,15 +5,15 @@
 ### 类型注解
 作用：相当于强类型语言中的类型声明
 
-语法：(变量/函数):type
+语法：(变量/函数): type
 
-```
+```typescript
 let str: string = "abc"
 ```
 
 ### 联合类型
 
-```
+```typescript
 let count: number | string = 10
 ```
 
@@ -31,23 +31,23 @@ let count: number | string = 10
 
 ### 数组类型
 
-有两种类型注解方式，特别注意第二种使用TS内置的Array泛型接口。
+有两种类型注解方式，特别注意第二种使用 TS 内置的 Array 泛型接口。
 
-```
+```typescript
 let arr1: number[] = [1,2,3]
-// 下面就是使用TS内置的Array泛型接口来实现的
+// 下面就是使用 TS 内置的 Array 泛型接口来实现的
 let arr2: Array<number | string> = [1,2,3,"abc"]
 ```
 
 ### 元组类型
 元组是一种特殊的数组，限定了数组元素的个数和类型
 
-```
+```typescript
 let tuple: [number, string] = [0, "1"];
 ```
 
 **需要注意元祖的越界问题，虽然可以越界添加元素，但是仍然是不能越界访问，强烈不建议这么使用**
-```
+```typescript
 tuple.push(2)  // 不报错
 console.log(tuple) // [0, "1", 2] 也能都打印出来
 console.log(tuple[2]) // 但是想取出元组中的越界元素，就会报错元组长度是2，在index为2时没有元素
@@ -57,7 +57,7 @@ console.log(tuple[2]) // 但是想取出元组中的越界元素，就会报错�
 
 函数类型可以先定义再使用，具体实现时就可以 不用注明参数和返回值类型了,而且参数名称也不用必须跟定义时相同。
 
-```
+```typescript
 let compute: (x: number, y: number) => number;
 compute = (a, b) => a + b;
 ```
@@ -66,7 +66,7 @@ compute = (a, b) => a + b;
 
 对象如果要赋值或者修改属性值，那么就不能用简单的对象类型，需要定义完整的对象类型
 
-```
+```typescript
 let obj: object = { x: 1, y: 2 };
 obj.x = 3; // 会报错，只是简单的定义了是object类型，但是里面到底有什么属性没有标明
 
@@ -75,36 +75,36 @@ let obj: { x: number; y: number } = { x: 1, y: 2 };
 obj.x = 3;
 ```
 
-### symbol类型
+### symbol 类型
 
-symbol类型可以直接声明为symbol类型，也可以直接赋值，跟ES6一样，两个分别声明的symbol是不相等的。
+symbol 类型可以直接声明为 symbol 类型，也可以直接赋值，跟 ES6 一样，两个分别声明的 symbol 是不相等的。
 
-```
+```typescript
 let s1: symbol = Symbol();
 let s2 = Symbol();
 console.log(s1 === s2)  // false
 ```
 
-### undefined、null类型
+### undefined 、null 类型
 
-变量可以被声明为undefined和null，但是一旦被声明，就不能再赋值其他类型。
+变量可以被声明为 undefined 和 null ，但是一旦被声明，就不能再赋值其他类型。
 
-```
+```typescript
 let un: undefined = undefined;
 let nu: null = null;
 un = 1 // 会报错
 nu = 1 // 会报错
 ```
 
-undefined和null是任何类型的子类型，那就可以赋值给其他类型。但是需要设置配置项"strictNullChecks": false
+undefined 和 null 是任何类型的子类型，那就可以赋值给其他类型。但是需要设置配置项 "strictNullChecks": false
 
-```
-// 设置"strictNullChecks": false
+```typescript
+// 设置 "strictNullChecks": false
 let num: number = 123;
 num = undefined;
 num = null;
 
-// 但是更建议将num设置为联合类型
+// 但是更建议将 num 设置为联合类型
 let num: number | undefined | null = 123;
 num = undefined;
 num = null;
@@ -116,7 +116,7 @@ num = null;
 
 #### 数字枚举
 枚举既能通过名字取值，又能通过索引取值，我们具体看一下是怎么取到的。
-```
+```typescript
 enum Role {
   Reporter = 1,
   Developer,
@@ -125,11 +125,12 @@ enum Role {
   Guest
 }
 // Role.Reporter = 2 // 枚举成员是只读的，不能修改重新赋值
+
 console.log(Role)
 //打印出来：{1: "Reporter", 2: "Developer", 3: "Maintainer", 4: "Owner", 5: "Guest", Reporter: 1, Developer: 2, Maintainer: 3, Owner: 4, Guest: 5}
-//我们看到打印出来是一个对象，对象中有索引值作为key的，有名字作为key的，所以枚举既能通过名字取值，又能通过索引取值
+//我们看到打印出来是一个对象，对象中有索引值作为 key 的，有名字作为 key 的，所以枚举既能通过名字取值，又能通过索引取值
 
-// 看一下TS编译器是怎么用反向映射实现枚举的。
+// 看一下 TS 编译器是怎么用反向映射实现枚举的。
 "use strict";
 var Role;
 (function (Role) {
@@ -144,19 +145,19 @@ var Role;
 #### 字符串枚举
 字符串枚举只能通过名字取值，不能通过索引取值。
 
-```
+```typescript
 enum Message {
   Success = '成功',
   Fail = '失败'
 }
 console.log(Message)
 // 打印出来：{Success: "成功", Fail: "失败"}
-// 我们看到只有名字作为key，说明字符串枚举不能反向映射
+// 我们看到只有名字作为 key ，说明字符串枚举不能反向映射
 ```
 
 #### 常量枚举
-用 const 声明的枚举就是常量枚举，会在编译阶段被移除。如下代码编译后Month是不产生代码的，只能在编译前使用，当我们不需要一个对象，但是需要一个对象的值的时候，就可以使用常量枚举，这样可以减少编译后的代码。
-```
+用 const 声明的枚举就是常量枚举，会在编译阶段被移除。如下代码编译后 Month 是不产生代码的，只能在编译前使用，当我们不需要一个对象，但是需要一个对象的值的时候，就可以使用常量枚举，这样可以减少编译后的代码。
+```typescript
 const enum Month {
   Jan,
   Feb,
@@ -167,7 +168,7 @@ let month = [Month.Jan, Month.Feb, Month.Mar];
 
 #### 异构枚举
 数字和字符串枚举混用，**不推荐**
-```
+```typescript
 enum Answer {
   N,
   Y = 'Yes',
@@ -179,13 +180,13 @@ enum Answer {
 #### 枚举成员注意点
 
 * 枚举成员是只读的，不能修改重新赋值
-* 枚举成员的分为const member和computer member
+* 枚举成员的分为 const member 和 computer member
  - 常量成员（const member），包括没有初始值的情况、对已有枚举成员的引用、常量表达式，会在编译的时候计算出结果，以常量的形式出现在运行时环境
  - 计算成员（computer member），需要被计算的枚举成员，不会在编译阶段进行计算，会被保留到程序的执行阶段
-* 在computed member后面的枚举成员，一定要赋一个初始值，否则报错
+* 在 computed member 后面的枚举成员，一定要赋一个初始值，否则报错
 * 含字符串成员的枚举中不允许使用计算值（computer member），并且在字符串枚举成员后面的枚举成员必须赋一个初始值，否则会报错（见上面的异构类型）
-* 数字枚举中，如果有两个成员有同样索引，那么后面索引会覆盖前面的（见下面的枚举number）
- ```
+* 数字枚举中，如果有两个成员有同样索引，那么后面索引会覆盖前面的（见下面的枚举 number ）
+ ```typescript
   // 枚举成员
   enum Char {
     // const member 常量枚举，会在编译阶段计算结果，以常量的形式出现在运行时环境
@@ -196,26 +197,26 @@ enum Answer {
     // computed member 需要被计算的枚举成员，不会在编译阶段进行计算，会被保留到执行阶段
     d = Math.random(),
     e = '123'.length,
-    // 在computed member后面的枚举成员，一定要赋一个初始值，否则报错
+    // 在 computed member 后面的枚举成员，一定要赋一个初始值，否则报错
     f = 1
   }
   console.log(Char)
 
-  // 枚举number
+  // 枚举 number
   enum number { a = 1, b = 5, c = 4, d }
   console.log(number) //打印出{1: "a", 4: "c", 5: "d", a: 1, b: 5, c: 4, d: 5}
-  // b赋初始值为5，c赋初始值为4，按照索引递增，d的索引就是5，索引相同时，后面的值覆盖前面的，所以5对应的value就是d
+  // b赋初始值为5，c赋初始值为4，按照索引递增，d的索引就是5，索引相同时，后面的值覆盖前面的，所以5对应的 value 就是d
  ```
 
  #### 枚举和枚举成员作为单独的类型
  有以下三种情况，（1）枚举成员都没有初始值、（2）枚举成员都是数字枚举、（3）枚举成员都是字符串枚举
 
- * 变量定义为数字枚举类型，赋值**任意number类型**的值都是可以的（可以超出枚举定义的数字范围），对枚举没有影响，但是不能赋值字符串等。
+ * 变量定义为数字枚举类型，赋值**任意 number 类型**的值都是可以的（可以超出枚举定义的数字范围），对枚举没有影响，但是不能赋值字符串等。
  * 不同的枚举类型是不能比较的，不过同一个枚举类型是可以比较的，但是同一个枚举类型的不同枚举成员是不能比较的
  * 变量定义为枚举类型，甚至就算定义为枚举类型的某个具体成员的类型，赋值也是对枚举没有影响的。（如下，E和F的结果还是不变的）
  * 字符串枚举类型的赋值，只能用枚举成员，不能随意赋值。（如果下F）
 
- ```
+ ```typescript
   enum E { a, b } // 枚举成员都没有初始值
   enum F F { a = 1, b = 5, c = 4, d } // 枚举成员都是数字枚举
   enum G { a = 'apple', b = 'banana' } // 枚举成员都是字符串枚举
@@ -251,7 +252,7 @@ enum Answer {
  ##### 对象冗余字段
  对象类型接口直接验证有冗余字段的**对象字面量**时会报错，这种冗余字段有时是不可避免的存在的。
 
- ```
+ ```typescript
   interface List {
     id: number;
     name: string;
@@ -274,9 +275,9 @@ enum Answer {
   });
   // 这就是对象类型接口直接验证有冗余字段的“对象字面量”，上面render中会有报错，说对象文字可以只指定已知属性，并且"sex"不在类型"List"中
  ```
- > 解决方法一：在外面声明变量result,然后把result传入render函数，避免传入对象字面量。
+ > 解决方法一：在外面声明变量 result ,然后把 result 传入 render 函数，避免传入对象字面量。
 
- ```
+ ```typescript
  // 把字面量先赋值给一个变量这样就能绕过检测
   let result = {
     data: [
@@ -287,9 +288,9 @@ enum Answer {
   render(result);
  ```
 
- > 解决方法二： 用类型断言（两种 as 和尖括号），但是如果对象字面中都没有符合的，还是会报错，可以用as unknown as xxx
+ > 解决方法二： 用类型断言（两种 as 和尖括号），但是如果对象字面中都没有符合的，还是会报错，可以用 as unknown as xxx
 
- ```
+ ```typescript
   render({
     data: [{ id: 1, name: "A", sex: "male" }, { id: 2, name: "B" }]
   } as Result);
@@ -299,7 +300,7 @@ enum Answer {
     data: [{ id: 1, name: "A", sex: "male" }]
   } as Result); // 还是会报错属性"data"的类型不兼容
 
-  // 现在就需要这么写，用as unknown as xxx
+  // 现在就需要这么写，用 as unknown as xxx
   render({
     data: [{ id: 1, name: "A", sex: "male" }]
   } as unknown as Result);
@@ -308,7 +309,7 @@ enum Answer {
 
  > 解决方法三：用字符串索引签名
 
- ```
+ ```typescript
   interface List {
     id: number;
     name: string;
@@ -319,7 +320,7 @@ enum Answer {
 
  ##### 接口属性可定义为只读属性和可选属性
 
- ```
+ ```typescript
   interface List {
     readonly id: number; // 只读属性
     name: string;
@@ -329,17 +330,17 @@ enum Answer {
 
  ##### 不确定一个接口中有多少属性时，可以使用可索引类型。分为数字索引签名和字符串索引签名，如果接口定义了某一种索引签名的值的类型，之后再定义的属性的值必须是签名值的类型的子类型。可以同时使用两种类型的索引，但是数字索引的返回值必须是字符串索引返回值类型的子类型。
 
- ```
+ ```typescript
   interface Names {
     [x: string]: number | string;
-    // y: boolean; // 会报错 boolean不会赋值给字符串索引类型，因为字符串索引签名的类型是 number | string，所以之后再定义的属性必须是签名值类型的子类型
+    // y: boolean; // 会报错 boolean 不会赋值给字符串索引类型，因为字符串索引签名的类型是 number | string，所以之后再定义的属性必须是签名值类型的子类型
     [z: number]: number; // 字符串索引签名后也能定义数字索引签名，数字索引的返回值必须是字符串索引返回值类型的子类型
   }
  ```
 
 #### 函数类型接口
 
-```
+```typescript
 interface Add {
   (x: number, y: number): number;
 }
@@ -350,7 +351,7 @@ let add4: Add = (a,b) => a + b
 #### 混合接口
 
 混合接口，需要注意看一下，接口中的属性没有顺序之分，混合接口不需要第一个属性是匿名函数。
-```
+```typescript
 interface Lib {
   version: string;
   ():void;
@@ -364,7 +365,7 @@ lib.doSomething = () => {}
 
 #### 接口继承
 
-```
+```typescript
 // 以下是接口继承的例子
 interface Human {
   name: string;
@@ -388,9 +389,9 @@ let boy: Boy = {
 
 ### 函数类型相关
 
-#### 定义TS函数的四种方式，第一种方式可以直接调用，但是后三种就需要先实现定义的函数再调用
+#### 定义 TS 函数的四种方式，第一种方式可以直接调用，但是后三种就需要先实现定义的函数再调用
 
-```
+```typescript
 // 第一种，直接声明
 function add1 (x:number, y:number):number {
   return x + y
@@ -421,7 +422,7 @@ add4(4, 2)
 ```
 
 #### 可选参数: 可选参数必须位于必选参数之后，即可选参数后面不能再有必选参数
-```
+```typescript
 // y后面不能再有必选参数，所以d会报错
 // function add5(x:number, y?:number, d:number) {
 
@@ -434,18 +435,18 @@ add5(1)
 
 #### 参数默认值：带默认值的参数不需要放在必选参数后面，但如果带默认值的参数出现在必选参数前面，必须明确的传入undefined值来获得默认值。在所有必选参数后面的带默认值的参数都是可选的，与可选参数一样，在调用函数的时候可以省略。
 
-```
+```typescript
 function add6 (x: number, y = 0, z:number,q = 1) {
   return x +y + z +q
 }
 add6(1,undefined,2)
 ```
 
-#### 函数重载: 要求定义一系列的函数声明，在类型最宽泛的版本中实现重载 TS编译器的函数重载会去查询一个重载的列表，并且从最开始的一个进行匹配，如果匹配成功，就直接执行。所以我们要把大概率匹配的定义写在前面。
+#### 函数重载: 要求定义一系列的函数声明，在类型最宽泛的版本中实现重载 TS 编译器的函数重载会去查询一个重载的列表，并且从最开始的一个进行匹配，如果匹配成功，就直接执行。所以我们要把大概率匹配的定义写在前面。
 
 函数重载的声明只用于类型检查阶段，在编译后会被删除。
 
-```
+```typescript
 function add8(...rest: number[]):number
 function add8(...rest: string[]):string
 function add8(...rest: any[]):any {
@@ -474,16 +475,16 @@ add8('1','2','3') // '123'
 
 2、 private: 私有属性
 
-私有属性只能在声明的类中访问，在子类或者生成的实例中都不能访问,但是private属性可以在实例的方法中被访问到，因为也相当于在类中访问，但是子类的的实例方法肯定是访问不到的。
+私有属性只能在声明的类中访问，在子类或者生成的实例中都不能访问,但是 private 属性可以在实例的方法中被访问到，因为也相当于在类中访问，但是子类的的实例方法肯定是访问不到的。
 
-可以把类的constructor定义为私有类型，那么这个类既不能被实例化也不能被继承
+可以把类的 constructor 定义为私有类型，那么这个类既不能被实例化也不能被继承
 
 
 3、 protected 受保护属性
 
-受保护属性只能在声明的类及其子类中访问,但是protect属性可以在实例的方法中被访问到，因为也相当于在类中访问
+受保护属性只能在声明的类及其子类中访问,但是 protect 属性可以在实例的方法中被访问到，因为也相当于在类中访问
 
-可以把类的constructor定义为受保护类型,那么这个类不能被实例化,但是可以被继承，相当于基类
+可以把类的 constructor 定义为受保护类型,那么这个类不能被实例化,但是可以被继承，相当于基类
 
 4、 readonly 只读属性
 
@@ -495,7 +496,7 @@ add8('1','2','3') // '123'
 
 **注意：构造函数的参数也可以添加修饰符,这样可以将参数直接定义为类的属性**
 
-```
+```typescript
 class Dog {
   constructor(name: string) {
     this.name = name
@@ -542,7 +543,7 @@ console.log(Husky.food) // 'bones' 子类可以调用父类的静态属性
 
 在抽象类中可以添加共有的方法，也可以添加抽象方法，然后由子类具体实现
 
-```
+```typescript
 abstract class Animal {
   eat() {
     console.log('eat')
@@ -571,7 +572,7 @@ cat.eat()
 * 类实现接口时，必须实现接口的全部属性，不过类可以定义自己的属性
 * 接口不能约束类的构造函数，只能约束公有成员
 
-```
+```typescript
 interface Human {
   // new (name:string):void // 接口不能约束类的构造函数
   name: string;
@@ -598,10 +599,10 @@ class Asian implements Human {
 
 被抽象的类的子类，也可以实现类抽象出来的接口，而且不用实现这个子类的父类已有的属性
 
-```
+```typescript
 class Auto {
   state = 1
-  // protected state2 = 0 // 下面的C会报错，因为C并不是Auto的子类，C只是实现了Auto抽象出来的接口
+  // protected state2 = 0 // 下面的C会报错，因为C并不是 Auto 的子类，C只是实现了 Auto 抽象出来的接口
 }
 interface AutoInterface extends Auto {
 
@@ -612,7 +613,7 @@ class C implements AutoInterface {
 
 // 被抽象的类的子类，也可以实现类抽象出来的接口，而且不用实现父类的已有的属性
 class Bus extends Auto implements AutoInterface {
-  // 不用设置state，Bus的父类已经有了。
+  // 不用设置 state ，Bus 的父类已经有了。
 
 }
 
@@ -624,7 +625,7 @@ class Bus extends Auto implements AutoInterface {
 **注意：用泛型定义函数类型时的位置不用，决定是否需要指定参数类型，见下面例子。**
 
 泛型函数例子
-```
+```typescript
 function log<T>(value: T): T {
   console.log(value)
   return value
@@ -633,18 +634,18 @@ function log<T>(value: T): T {
 log<string[]>(['a', 'b'])
 log([1, 2]) // 可以不用指定类型，TS会自动推断
 
-还可以用类型别名定义泛型函数
-下面的定义不用指定参数类型
+// 还可以用类型别名定义泛型函数
+//下面的定义不用指定参数类型
 type Log = <T>(value:T) => T // 不用指定参数类型，会自己推断
 let myLog: Log = log
-下面的定义必须指定参数类型
+//下面的定义必须指定参数类型
 type Log<T> = (value:T) => T // 如果这样用泛型定义函数类型，必须指定一个参数类型
 let myLog: Log<string> = log
 ```
 
 #### 泛型接口
 
-```
+```typescript
 function log<T>(value: T): T {
   console.log(value)
   return value
@@ -671,7 +672,7 @@ let myLog2: Log2 = log
 
 #### 泛型类
 
-```
+```typescript
 class Log3<T> {
   // 静态成员不能引用类类型参数
   // static start(value: T) {
@@ -694,7 +695,7 @@ log4.run('abc')
 #### 泛型约束
 约束泛型传入的类型
 
-```
+```typescript
 interface Length {
   length: number
 }
@@ -719,21 +720,21 @@ log5({length: 1})
 
 
 ## 类型检查机制
-**类型检查机制： TypeScript编译器在做类型检查时，所秉承的一些原则，以及表现出的一些行为。其作用是辅助开发，提高开发效率**
+**类型检查机制： TypeScript 编译器在做类型检查时，所秉承的一些原则，以及表现出的一些行为。其作用是辅助开发，提高开发效率**
 
 ### 类型推断
-**类型推断: 指的是不需要指定变量的类型（函数的返回值类型），TypeScript可以根据某些规则自动地为其推断出一个类型**
+**类型推断: 指的是不需要指定变量的类型（函数的返回值类型），TypeScript 可以根据某些规则自动地为其推断出一个类型**
 
 #### 基础类型推断
-```
+```typescript
 let a = 1 // 推断为 number
 let b = [1] // 推断为 number[]
 let c = (x = 1) => x + 1 // 推断为 (x?: number) => number
 ```
 
 #### 最佳通用类型推断
-当需要从多个类型中推断出一个类型的时候，TypeScript会尽可能的推断出一个兼容当前所有类型的通用类型
-```
+当需要从多个类型中推断出一个类型的时候，TypeScript 会尽可能的推断出一个兼容当前所有类型的通用类型
+```typescript
 let d = [1, null]
 // 推断为一个最兼容的类型，所以推断为(number | null)[]
 // 当关闭"strictNullChecks"配置项时，null是number的子类型，所以推断为number[]
@@ -744,8 +745,8 @@ let d = [1, null]
 
 
 ### 类型断言
-在确定自己比TS更准确的知道类型时，可以使用类型断言来绕过TS的检查，改造旧代码很有效，但是防止滥用。
-```
+在确定自己比 TS 更准确的知道类型时，可以使用类型断言来绕过 TS 的检查，改造旧代码很有效，但是防止滥用。
+```typescript
 interface Bar {
   bar: number
 }
@@ -763,7 +764,7 @@ let foo1: Bar = {
 
 `X兼容Y：X（目标类型） = Y（源类型）`
 
-```
+```typescript
 let s: string = 'a'
 s = null // 把编译配置中的strictNullChecks设置成false，字符类型是兼容null类型的（因为null是字符的子类型）
 ```
@@ -772,7 +773,7 @@ s = null // 把编译配置中的strictNullChecks设置成false，字符类型�
 
 **成员少的兼容成员多的**
 
-```
+```typescript
 interface X {
   a: any;
   b: any;
@@ -792,7 +793,7 @@ x = y
 
 #### 函数兼容性
 
-```
+```typescript
 type Handler = (a: number, b: number) => void
 function test(handler: Handler) {
   return handler
@@ -806,7 +807,7 @@ function test(handler: Handler) {
 
 Handler目标函数，传入test的 **参数** 就是源函数
 
-```
+```typescript
 let handler1 = (a: number) => { }
 hof(handler1) // 传入的函数能接收一个参数，且参数是number，是兼容的
 let handler2 = (a: number, b: number, c: number) => { }
@@ -815,7 +816,7 @@ let handler2 = (a: number, b: number, c: number) => { }
 
 ###### 可选参数和剩余参数
 
-```
+```typescript
 let a1 = (p1: number, p2: number) => { }
 let b1 = (p1?: number, p2?: number) => { }
 let c1 = (...args: number[]) => { }
@@ -823,21 +824,21 @@ let c1 = (...args: number[]) => { }
 
 > (1) 固定参数时可以兼容可选参数和剩余参数的
 
-```
+```typescript
 a1 = b1 // 兼容
 a1 = c1 // 兼容
 ```
 
 > (2) 可选参数是不兼容固定参数和剩余参数的,但是可以通过设置"strictFunctionTypes": false来消除报错，实现兼容
 
-```
+```typescript
 b1 = a1 //不兼容
 b1 = c1 // 不兼容
 ```
 
 > (3) 剩余参数可以兼容固定参数和可选参数
 
-```
+```typescript
 c1 = a1 // 兼容
 c1 = b1 // 兼容
 ```
@@ -846,7 +847,7 @@ c1 = b1 // 兼容
 
 ###### 基础类型
 
-```
+```typescript
 // 接上面的test函数
 let handler3 = (a: string) => { }
 test(handler3) // 类型不兼容
@@ -856,7 +857,7 @@ test(handler3) // 类型不兼容
 
 接口成员多的兼容成员少的，也**可以理解把接口展开，参数多的兼容参数少的**。对于不兼容的，也可以通过设置"strictFunctionTypes": false来消除报错，实现兼容
 
-```
+```typescript
 interface Point3D {
   x: number;
   y: number;
@@ -876,7 +877,7 @@ p2d = p3d // 不兼容
 ##### 3、返回值类型
 目标函数的返回值类型必须与源函数的返回值类型相同，或者是其子类型
 
-```
+```typescript
 let f = () => ({ name: 'Alice' })
 let g = () => ({ name: 'A', location: 'beijing' })
 f = g // 兼容
@@ -885,40 +886,40 @@ g = f // 不兼容
 
 ##### 4、函数重载
 函数重载列表（目标函数）
-```
+```typescript
 function overload(a: number, b: number): number;
 function overload(a: string, b: string): string;
 ```
 函数的具体实现（源函数）
-```
+```typescript
 function overload(a: any, b: any): any { }
 ```
 目标函数的参数要多于源函数的参数才能兼容
-```
+```typescript
 function overload(a:any,b:any,c:any):any {} // 具体实现时的参数多于重载列表中匹配到的第一个定义的函数的参数，也就是源函数的参数多于目标函数的参数，不兼容
 ```
 返回值类型不兼容
-```
+```typescript
 function overload(a:any,b:any) {} // 去掉了返回值的any，不兼容
 ```
 
 #### 枚举类型兼容性
 
-```
+```typescript
 enum Fruit { Apple, Banana }
 enum Color { Red, Yello }
 ```
 
 ##### 枚举类型和数字类型是完全兼容的
 
-```
+```typescript
 let fruit: Fruit.Apple = 4
 let no: number = Fruit.Apple
 ```
 
 ##### 枚举类型之间是完全不兼容的
 
-```
+```typescript
 let color: Color.Red = Fruit.Apple // 不兼容
 ```
 
@@ -926,7 +927,7 @@ let color: Color.Red = Fruit.Apple // 不兼容
 
 和接口比较相似，只比较结构，需要注意，在比较两个类是否兼容时，**静态成员和构造函数是不参与比较的**，如果两个类具有相同的实例成员，那么他们的实例就相互兼容
 
-```
+```typescript
 class A {
   constructor(p: number, q: number) { }
   id: number = 1
@@ -950,7 +951,7 @@ bb = aa
 
 如果一个类中有私有属性，另一个类继承了这个类，那么这两个类就是兼容的。
 
-```
+```typescript
 class A {
   constructor(p: number, q: number) { }
   id: number = 1
@@ -979,7 +980,7 @@ cc = aa
 
 ##### 泛型接口
 泛型接口为空时，泛型指定不同的类型，也是兼容的。
-```
+```typescript
 interface Empty<T> {}
 
 let obj1:Empty<number> = {}
@@ -990,7 +991,7 @@ obj2 = obj1
 ```
 
 如果泛型接口中有一个接口成员时，类型不同就不兼容了
-```
+```typescript
 interface Empty<T> {
   value: T
 }
@@ -1005,7 +1006,7 @@ obj2 = obj1
 ##### 泛型函数
 两个泛型函数如果定义相同，没有指定类型参数的话也是相互兼容的
 
-```
+```typescript
 let log1 = <T>(x: T): T => {
   return x
 }
@@ -1022,10 +1023,10 @@ log2 = log1
 
 ## 类型保护机制
 
-指的是TypeScript能够在特定的区块(`类型保护区块`)中保证变量属于某种特定的类型。可以在此区块中放心地引用此类型的属性，或者调用此类型的方法。
+指的是 TypeScript 能够在特定的区块(`类型保护区块`)中保证变量属于某种特定的类型。可以在此区块中放心地引用此类型的属性，或者调用此类型的方法。
 
 前置代码，之后的代码在此基础运行
-```
+```typescript
 enum Type { Strong, Week }
 
 class Java {
@@ -1043,8 +1044,8 @@ class JavaScript {
 }
 ```
 
-实现getLanguage方法直接用lang.helloJava是不是存在作为判断是会报错的
-```
+实现 getLanguage 方法直接用 lang.helloJava 是不是存在作为判断是会报错的
+```typescript
 function getLanguage(type: Type, x: string | number) {
   let lang = type === Type.Strong ? new Java() : new JavaScript()
 
@@ -1059,7 +1060,7 @@ function getLanguage(type: Type, x: string | number) {
 ```
 
 > 利用之前的知识可以使用类型断言解决
-```
+```typescript
 function getLanguage(type: Type, x: string | number) {
   let lang = type === Type.Strong ? new Java() : new JavaScript()
 
@@ -1074,7 +1075,7 @@ function getLanguage(type: Type, x: string | number) {
 ```
 
 > 类型保护第一种方法，instanceof
-```
+```typescript
 function getLanguage(type: Type, x: string | number) {
   let lang = type === Type.Strong ? new Java() : new JavaScript()
 
@@ -1089,7 +1090,7 @@ function getLanguage(type: Type, x: string | number) {
 ```
 
 > 类型保护第二种方法， in 可以判断某个属性是不是属于某个对象
-```
+```typescript
 function getLanguage(type: Type, x: string | number) {
   let lang = type === Type.Strong ? new Java() : new JavaScript()
 
@@ -1103,8 +1104,8 @@ function getLanguage(type: Type, x: string | number) {
 }
 ```
 
-> 类型保护第三种方法， typeof类型保护，可以帮助我们判断基本类型
-```
+> 类型保护第三种方法， typeof 类型保护，可以帮助我们判断基本类型
+```typescript
 function getLanguage(type: Type, x: string | number) {
   let lang = type === Type.Strong ? new Java() : new JavaScript()
 
@@ -1121,13 +1122,13 @@ function getLanguage(type: Type, x: string | number) {
 >类型保护第四种方法，通过创建一个类型保护函数来判断对象的类型
 
 **类型保护函数**的返回值有点不同，用到了 is ，叫做**类型谓词**
-```
+```typescript
 function isJava(lang: Java | JavaScript): lang is Java {
   return (lang as Java).helloJava !== undefined
 }
 ```
 
-```
+```typescript
 function getLanguage(type: Type, x: string | number) {
   let lang = type === Type.Strong ? new Java() : new JavaScript()
 
@@ -1147,6 +1148,287 @@ function getLanguage(type: Type, x: string | number) {
 * instanceof：判断一个实例是否属于某个类
 * in：判断一个属性是否属于某个对象
 * 类型保护函数：某些判断可能不是一条语句能够搞定的，需要更多复杂的逻辑，适合封装到一个函数内
+
+
+## 高级类型
+
+### 交叉类型
+用 `&` 符号。虽然叫交叉类型，但是是取的所有类型的**并集**。
+
+```typescript
+interface DogInterface {
+  run(): void
+}
+
+interface CatInterface {
+  jump(): void
+}
+
+// 交叉类型 用 & 符号。虽然叫交叉类型，但是是取的所有类型的并集。
+let pet: DogInterface & CatInterface = {
+  run() { },
+  jump() { }
+}
+```
+
+### 联合类型
+声明的类型并不确定，可以为多个类型中的一个,除了可以是 TS 中规定的类型外，还有字符串字面量联合类型、数字字面量联合类型
+
+```typescript
+let a: number | string = 1;
+
+// 字符串字面量联合类型
+let b: 'a' | 'b' | 'c' = 'a'
+
+// 数字字面量联合类型
+let c: 1 | 2 | 3 = 1
+```
+
+#### 对象联合类型
+对象的联合类型，只能取两者共有的属性，所以说对象联合类型只能访问所有类型的交集
+
+```typescript
+class Dog implements DogInterface {
+  run() { }
+  eat() { }
+}
+
+class Cat implements CatInterface {
+  jump() { }
+  eat() { }
+}
+enum Master { Boy, Girl }
+function getPet(master: Master) {
+  // pet为Dog和Cat的联合类型，只能取两者共有的属性，所以说联合类型在此时只能访问所有类型的交集
+  let pet = master === Master.Boy ? new Dog() : new Cat()
+  pet.eat()
+  // pet.run() // 不能访问，会报错
+  return pet
+}
+```
+
+#### 可区分的联合类型
+
+这种模式是结合了联合类型和字面量类型的类型保护方法，一个类型如果是多个类型的联合类型，并且每个类型之间有一个公共的属性，我们就可以凭借这个公共属性来创建不同的类型保护区块。
+
+**核心是利用两种或多种类型的共有属性，来创建不同的代码保护区块**
+
+下面的函数如果只有 Square 和 Rectangle 这两种联合类型，没有问题，但是一旦扩展增加 Circle 类型，不会正常运行，而且也不报错，这个时候我们是希望代码有报错提醒的。
+```typescript
+interface Square {
+  kind: "square";
+  size: number;
+}
+interface Rectangle {
+  kind: 'rectangle';
+  width: number;
+  height: number;
+}
+interface Circle {
+  kind: 'circle';
+  r: number;
+}
+type Shape = Square | Rectangle | Circle
+
+// 下面的函数如果只有Square和Rectangle这两种联合类型，没有问题，但是一旦扩展增加Circle类型，不会正常运行，而且也不报错，这个时候我们是希望代码有报错提醒的。
+function area(s: Shape) {
+  switch (s.kind) {
+    case "square":
+      return s.size * s.size;
+      break;
+    case "rectangle":
+      return s.width * s.height;
+      break;
+  }
+}
+
+console.log(area({ kind: 'circle', r: 1 }))
+// undefined，不报错，这个时候我们是希望代码有报错提醒的
+```
+
+如果想要得到正确的报错提醒，第一种方法是设置明确的返回值,第二种方法是利用 never 类型.
+
+> 第一种方法是设置明确的返回值
+
+```typescript
+// 会报错：函数缺少结束返回语句，返回类型不包括 "undefined"
+function area(s: Shape): number {
+  switch (s.kind) {
+    case "square":
+      return s.size * s.size;
+      break;
+    case "rectangle":
+      return s.width * s.height;
+      break;
+  }
+}
+```
+
+> 第二种方法是利用never类型,原理是在最后default判断分支写一个函数，设置参数是never类型，然后把最外面函数的参数传进去，正常情况下是不会执行到default分支的。
+```typescript
+function area(s: Shape) {
+  switch (s.kind) {
+    case "square":
+      return s.size * s.size;
+      break;
+    case "rectangle":
+      return s.width * s.height;
+      break;
+    case "circle":
+      return Math.PI * s.r ** 2;
+      break;
+    default:
+      return ((e: never) => { throw new Error(e) })(s)
+      //这个函数就是用来检查s是否是never类型，如果s是never类型，说明前面的分支全部覆盖了，如果s不是never类型，说明前面的分支有遗漏，就得需要补一下。
+  }
+}
+```
+
+### 索引类型
+
+#### 索引类型的查询操作符
+
+`keyof T` 表示类型T的所有公共属性的字面量的联合类型
+```typescript
+interface Obj {
+  a: number;
+  b: string;
+}
+let key: keyof Obj
+// key的类型就是Obj的属性a和b的联合类型：let key: "a" | "b"
+```
+
+#### 索引访问操作符
+
+`T[K]` 表示对象T的属性K所代表的类型
+```typescript
+interface Obj {
+  a: number;
+  b: string;
+}
+let value: Obj['a']
+// value的类型就是Obj的属性a的类型： let value: number
+```
+
+#### 泛型约束
+`T extends U` 泛型变量可以继承某个类型获得某些属性
+
+先看如下代码片段存在的问题。
+```typescript
+let obj = {
+  a: 1,
+  b: 2,
+  c: 3
+}
+
+//如下函数如果访问obj中不存在的属性也是没有报错的。
+function getValues(obj: any, keys: string[]) {
+  return keys.map(key => obj[key])
+}
+
+console.log(getValues(obj, ['a', 'b']))
+console.log(getValues(obj, ['e', 'f']))
+// 会显示[undefined, undefined]，但是TS编译器并没有报错。
+```
+解决如下
+```typescript
+function getValuest<T, K extends keyof T>(obj: T, keys: K[]): T[K][] {
+  return keys.map(key => obj[key])
+}
+console.log(getValuest(obj, ['a', 'b']))
+// console.log(getValuest(obj, ['e', 'f'])) // 这样就会报错了
+```
+
+### 映射类型
+
+可以从一个旧的类型，生成一个新的类型
+
+以下代码用到了TS内置的映射类型
+```typescript
+interface Obj {
+  a: string;
+  b: number;
+  c: boolean
+}
+
+// 以下三种类型称为同态，只会作用于Obj的属性，不会引入新的属性
+//把一个接口的所有属性变成只读
+type ReadonlyObj = Readonly<Obj>
+//把一个接口的所有属性变成可选
+type PartialObj = Partial<Obj>
+//可以抽取接口的子集
+type PickObj = Pick<Obj, 'a' | 'b'>
+
+// 非同态 会创建新的属性
+type RecordObj = Record<'x' | 'y', Obj>
+// 创建一个新的类型并引入指定的新的类型为
+// {
+//     x: Obj;
+//     y: Obj;
+// }
+```
+
+### 条件类型
+
+`T extends U ? X : Y`
+
+```typescript
+type TypeName<T> =
+  T extends string ? "string" :
+  T extends number ? "number" :
+  T extends boolean ? "boolean" :
+  T extends undefined ? "undefined" :
+  T extends Function ? "function" :
+  "object"
+
+type T1 = TypeName<string> // 得到的类型即： type T1 = "string"
+type T2 = TypeName<string[]> // 得到的类型即：type T2 = "object"
+```
+
+#### 分布式条件类型
+
+`(A | B) extends U ? X : Y` 等价于 `(A extends U ? X : Y) | (B extends U ? X : Y)`
+
+```typescript
+// 接上文
+type T3 = TypeName<string | string[]> // 得到的类型即：type T3 = "string" | "object"
+```
+
+用法一：利用分布式条件类型可以实现 Diff 操作
+
+```typescript
+type T4 = Diff<"a" | "b" | "c", "a" | "e"> // 即：type T4 = "b" | "c"
+// 拆分一下具体步骤
+// Diff<"a","a" | "e"> | Diff<"b","a" | "e"> | Diff<"c", "a" | "e">
+// 分布结果如下：never | "b" | "c"
+// 最终获得字面量的联合类型 "b" | "c"
+```
+用法二：在Diff的基础上实现过滤掉 null 和 undefined 的值。
+```typescript
+type NotNull<T> = Diff<T, undefined | null>
+type T5 = NotNull<string | number | undefined | null> // 即：type T5 = string | number
+```
+
+以上的类型别名在TS的类库中都有内置的类型
+* `Diff => Exclude<T, U>`
+* `NotNull => NonNullable<T>`
+
+此外，内置的还有很多类型，比如从类型T中抽取出可以赋值给U的类型 `Extract<T, U>`
+```typescript
+type T6 = Extract<"a" | "b" | "c", "a" | "e"> // 即：type T6 = "a"
+```
+比如： 用于提取函数类型的返回值类型 `ReturnType<T>`
+
+先写出 `ReturnType<T>` 的实现，`infer` 表示在 extends 条件语句中待推断的类型变量。
+
+```typescript
+type ReturnType<T extends (...args: any) => any> = T extends (...args: any) => infer R ? R : any;
+```
+分析一下上面的代码，首先要求传入 ReturnType 的 T 必须能赋值给一个最宽泛的函数，之后判断 T 能不能赋值给一个可以接受任意参数的返回值待推断为 R 的函数，如果可以，返回待推断返回值 R ，如果不可以，返回 any 。
+```typescript
+type T7 = ReturnType<() => string> //即：type T7 = string
+```
+
 
 ### VSCode工具配置
 
