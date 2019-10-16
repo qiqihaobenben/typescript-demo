@@ -4,11 +4,11 @@
 // import './interface-function'
 // import './class'
 // import './interface-class'
-// import './generics'
+import './generics'
 // import './check'
 // import './advanced'
 // import './advanced-ref'
 // import './advanced-map'
-import './advanced-condition'
+// import './advanced-condition'
 let hello: string = "Hello TypeScript";
 document.querySelectorAll('.app')[0].innerHTML = hello

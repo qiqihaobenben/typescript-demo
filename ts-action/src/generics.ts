@@ -60,12 +60,12 @@ interface Length {
   length: number
 }
 function log5<T extends Length>(value: T) {
-  console.log(value,value.length)
+  console.log(value, value.length)
   return value
 }
 log5([1])
 log5('abc')
-log5({length: 1})
+log5({ length: 1 })
 
 // 总结
 // 函数和类可以轻松地支持多种类型，增强程序的扩展性
