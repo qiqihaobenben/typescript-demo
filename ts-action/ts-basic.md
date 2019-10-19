@@ -47,7 +47,7 @@ let arr2: Array<number | string> = [1,2,3,"abc"]
 let tuple: [number, string] = [0, "1"];
 ```
 
-**需要注意元祖的越界问题，虽然可以越界添加元素，但是仍然是不能越界访问，强烈不建议这么使用**
+**需要注意元组的越界问题，虽然可以越界添加元素，但是仍然是不能越界访问，强烈不建议这么使用**
 ```typescript
 tuple.push(2)  // 不报错
 console.log(tuple) // [0, "1", 2] 也能都打印出来

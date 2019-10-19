@@ -4,7 +4,7 @@
 // import './interface-function'
 // import './class'
 // import './interface-class'
-import './generics'
+// import './generics'
 // import './check'
 // import './advanced'
 // import './advanced-ref'
